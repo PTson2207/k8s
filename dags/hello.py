@@ -5,7 +5,7 @@ from datetime import datetime
 # Define the DAG configuration
 default_args = {
     'owner': 'airflow',
-    'start_date': datetime.datetime.now(),
+    'start_date': datetime.now(),
     'catchup': False,
 }
 

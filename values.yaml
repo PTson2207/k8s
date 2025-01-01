@@ -6,7 +6,7 @@ executor: "KubernetesExecutor"
 dags:
   gitSync:
     enabled: true
-    repo: https://github.com/airscholar/Kubernetes-For-DataEngineering.git
+    repo: https://github.com/PTson2207/k8s.git
     branch: main
     rev: HEAD
     depth: 1
