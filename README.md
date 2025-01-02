@@ -132,3 +132,45 @@ The repository is organized as follows:
 ```
 - create dag and push to git repository
 - check UI in airflow
+
+### If the git repository is private
+
+- Create a Personal Access Token (PAT) on GitHub (or your Git provider)
+  ```bash
+   Go to Settings > Developer settings > Personal access tokens > Tokens (classic).
+   Click Generate new token.
+   Select the required permissions:
+   repo: Full access to repositories.
+   read:packages: If you need to read packages.
+   Click Generate token and copy the token (PAT).
+  ```
+
+- Save the token as Kubernetes Secret
+  ```bash
+   Create a Secret
+   kubectl create secret generic git-secret \
+  --from-literal=username=<your-github-username> \
+  --from-literal=password=<your-personal-access-token> \
+  -n airflow
+
+  ```
+  Replace:
+   - <your-github-username>: Your GitHub username.
+   - <your-personal-access-token>: The token you just generated.
+ - Configure Helm Chart to Use the Git Secret
+   - Add Git Sync Configuration in values.yaml
+   ```bash
+      dags:
+         gitSync:
+            enabled: true
+            repo: https://github.com/<your-username>/<your-repo>.git
+            branch: main
+            rev: HEAD
+            subPath: "dags"
+            credentialsSecret: git-secret
+            mountPath: /opt/airflow/dags
+   ```
+- Redeploy configuration in values.yaml
+  ```bash
+   helm upgrade --install airflow apache-airflow/airflow --namespace airflow --create-namespace -f values.yaml
+  ```
