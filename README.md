@@ -100,3 +100,35 @@ The repository is organized as follows:
 
 - **Kubernetes Dashboard:** Use the Dashboard to monitor and manage the Kubernetes cluster.
 - **Apache Airflow:** Access the Airflow web UI to manage, schedule, and monitor workflows.
+
+### Example create new dags with another libraries
+   - Create Dockerfile, then install libraries from the Dockerfile 
+   ```bash
+   FROM apache/airflow:2.7.1-python3.9
+
+   # Cài đặt các thư viện cần thiết
+   RUN pip install jaydebeapi scikit-learn tensorflow
+   ```
+   - Build and push docker image to container registry (Docker Hub or AWS ECR)
+   ```bash
+   # Build Docker image
+   docker build -t <your-registry>/airflow-custom:latest .
+
+   # Push Docker image
+   docker push <your-registry>/airflow-custom:latest
+   
+   Change <your-registry> with registry username
+   ```
+ - Update the file values.yaml
+ ```bash
+   images:
+      airflow:
+         repository: <your-registry>/airflow-custom
+         tag: latest
+ ```
+- update the airflow configuration
+```bash
+   helm upgrade --install airflow apache-airflow/airflow --namespace airflow --create-namespace -f values.yaml
+```
+- create dag and push to git repository
+- check UI in airflow
