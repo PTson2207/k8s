@@ -64,6 +64,15 @@ The repository is organized as follows:
 
    Generate token for the service account: `kubectl get secret admin-user -n kubernetes-dashboard -o jsonpath={".data.token"} | base64 -d`
 
+   Install apache airflow with helm:
+
+   `helm repo add apache-airflow https://airflow.apache.org`
+
+   `helm repo update`
+
+   `helm install airflow apache-airflow/airflow --namespace airflow --create-namespace --debug`
+
+
    Then, you can mapping the airflow webserver at: `kubectl port-forward svc/airflow-webserver 8080:8080 --namespace airflow`
 
    when update configuration in file values.yaml , config k8s with command: `helm upgrade --install airflow apache-airflow/airflow --namespace airflow --create-namespace -f values.yaml`
